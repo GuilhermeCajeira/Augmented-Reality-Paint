@@ -24,50 +24,54 @@ def rMin(r_min):
 def rMax(r_max):
     pass
    
-  
-#window for trackbars 
-window_name_original = 'Original'
-window_name_segmented = 'Segmented'
-cv2.namedWindow(window_name_original,cv2.WINDOW_AUTOSIZE)
+def main():
+
+    #window for trackbars 
+    window_name_original = 'Original'
+    window_name_segmented = 'Segmented'
+    cv2.namedWindow(window_name_original,cv2.WINDOW_AUTOSIZE)
 
 
-#trackbars
-cv2.createTrackbar("Blue_min", window_name_original, 0, 255, bMin)
-cv2.createTrackbar("Blue_max", window_name_original, 0, 255, bMax)
-cv2.createTrackbar("Green_min", window_name_original, 0, 255, gMin)
-cv2.createTrackbar("Green_max", window_name_original, 0, 255, gMax)
-cv2.createTrackbar("Red_min", window_name_original, 0, 255, rMin)
-cv2.createTrackbar("Red_max", window_name_original, 0, 255, rMax)
+    #trackbars
+    cv2.createTrackbar("Blue_min", window_name_original, 0, 255, bMin)
+    cv2.createTrackbar("Blue_max", window_name_original, 0, 255, bMax)
+    cv2.createTrackbar("Green_min", window_name_original, 0, 255, gMin)
+    cv2.createTrackbar("Green_max", window_name_original, 0, 255, gMax)
+    cv2.createTrackbar("Red_min", window_name_original, 0, 255, rMin)
+    cv2.createTrackbar("Red_max", window_name_original, 0, 255, rMax)
 
-cap=cv2.VideoCapture(0)
+    cap=cv2.VideoCapture(0)
 
-while True:
-    _, image = cap.read()
+    while True:
+        _, image = cap.read()
 
-    b_min = cv2.getTrackbarPos("Blue_min", window_name_original)
-    b_max = cv2.getTrackbarPos("Blue_max", window_name_original)
-    g_min = cv2.getTrackbarPos("Green_min", window_name_original)
-    g_max = cv2.getTrackbarPos("Green_max", window_name_original)
-    r_min = cv2.getTrackbarPos("Red_min", window_name_original)
-    r_max = cv2.getTrackbarPos("Red_max", window_name_original)
-    image_segmented = cv2.inRange(image,(b_min, g_min, r_min),(b_max, g_max, r_max))      
-    cv2.imshow(window_name_original, image)
-    cv2.imshow(window_name_segmented, image_segmented)
+        b_min = cv2.getTrackbarPos("Blue_min", window_name_original)
+        b_max = cv2.getTrackbarPos("Blue_max", window_name_original)
+        g_min = cv2.getTrackbarPos("Green_min", window_name_original)
+        g_max = cv2.getTrackbarPos("Green_max", window_name_original)
+        r_min = cv2.getTrackbarPos("Red_min", window_name_original)
+        r_max = cv2.getTrackbarPos("Red_max", window_name_original)
+        image_segmented = cv2.inRange(image,(b_min, g_min, r_min),(b_max, g_max, r_max))      
+        cv2.imshow(window_name_original, image)
+        cv2.imshow(window_name_segmented, image_segmented)
 
-    limits = {'B': {'min': b_min, 'max': b_max},
-                    'G': {'min': g_min, 'max': g_max},
-                    'R': {'min': r_min, 'max': r_max}}
+        limits = {'B': {'min': b_min, 'max': b_max},
+                        'G': {'min': g_min, 'max': g_max},
+                        'R': {'min': r_min, 'max': r_max}}
+
+        if cv2.waitKey(50) == ord('w'):
+            file_name = 'limits.json'
+            with open(file_name, "w") as file_handle:
+                json.dump(limits, file_handle) 
+
+        elif cv2.waitKey(50) == ord("q"):
+            break
+
+    cap.release()
+    cv2.destroyAllWindows()
     
-    if cv2.waitKey(50) == ord('w'):
-        file_name = 'limits.json'
-        with open(file_name, "w") as file_handle:
-            json.dump(limits, file_handle) 
-            
-    elif cv2.waitKey(50) == ord("q"):
-        break
-
-cap.release()
-cv2.destroyAllWindows()
+ if __name__ == "__main__":
+    main()
 
 
 
