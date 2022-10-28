@@ -59,14 +59,16 @@ def main():
                         'G': {'min': g_min, 'max': g_max},
                         'R': {'min': r_min, 'max': r_max}}
         
-        if cv2.waitKey(50) == ord('w'):
+        pressed_key = cv2.waitKey(20)
+        if pressed_key == ord('q'):
+            break
+        if pressed_key == ord('w'):
             file_name = 'limits.json'
             with open(file_name, "w") as file_handle:
                 json.dump(limits, file_handle) 
-                
-        elif cv2.waitKey(50) == ord("q"):
-            break
-
+     
+        
+  
     cap.release()
     cv2.destroyAllWindows()
 
