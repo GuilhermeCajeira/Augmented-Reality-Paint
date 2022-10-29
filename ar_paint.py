@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python
 
 
 import argparse
@@ -6,19 +6,18 @@ from csv import list_dialects
 from re import L
 import cv2
 import numpy as np
-import copy
+# import copy
 from functools import partial
 import json
-from colorama import Fore, Style
+from colorama import Fore, Back, Style
+from copy import deepcopy
 
 
-
-#Definição de argumentos 
+#Definicao de argumentos 
 parser = argparse.ArgumentParser(description="Definition of test mode")
 
 parser.add_argument("-j", "--json", help="Full path to json file")
 args = parser.parse_args()
-
 
 def drawLine(image, x, y, color, thickness):
         for xi, yi in zip(x, y):
@@ -32,7 +31,6 @@ def drawLine(image, x, y, color, thickness):
                     x2 = x[idx2]
                     y2 = y[idx2]
                     cv2.line(image, (x1, y1), (x2, y2), color, thickness)
-                
 
     
 def main():
@@ -42,13 +40,19 @@ def main():
     cap = cv2.VideoCapture(0)
     x_list = []
     y_list = []  
+
+    pencil_color = (0,0,0)
+    thickness = 5
+    # global xs, ys
+    # global options 
+    # options = {'image': None, 'xs': [], 'ys': [], 'pencil_color': (0,0,0)}
     
     while True:
         _, image = cap.read()
         img = cv2.resize(image, (800, 600))
         img_segmented = cv2.inRange(img, min, max)
         large_object_mask = np.zeros((600, 800, 1), np.uint8)
-        contours, _ = cv2.findContours(img_segmented, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
+        _, contours, _ = cv2.findContours(img_segmented, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
           
         for cnt in contours:
             area = cv2.contourArea(cnt)
@@ -64,12 +68,10 @@ def main():
                 x_list.append(cx)
                 y_list.append(cy)
 
-       
-        pressed_key = cv2.waitKey(20)   
         white_board = np.zeros((600, 800, 3), np.uint8)
         white_board.fill(255)
-        
-        drawLine(white_board, x_list, y_list, (0,0,0), 5)
+
+        drawLine(white_board, x_list, y_list, pencil_color, thickness)
 
     
         cv2.imshow("Whiteboard", white_board)
@@ -77,15 +79,32 @@ def main():
         cv2.imshow("Segmented", img_segmented)
         cv2.imshow("Largest object", large_object_mask)  
       
-
-        if pressed_key == ord('q'):
+        pressed_key = cv2.waitKey(20)
+        if pressed_key == ord('q'):     # Quite the program
             break
+        elif pressed_key == ord('c'):   # Clear the drawing
+            print(Fore.RED + 'You pressed c' + Style.RESET_ALL)
+            x_list = []
+            y_list = []
+        elif pressed_key == ord('r'):   # Draw with red color
+            pencil_color = (0,0,255)
+            print('Pencil color ' + Style.BRIGHT + Fore.RED + 'red ' + Style.RESET_ALL)
+        elif pressed_key == ord('g'):   # Draw with green color
+            pencil_color = (0,255,0)
+            print('Pencil color ' + Style.BRIGHT + Fore.GREEN + 'green ' + Style.RESET_ALL)
+        elif pressed_key == ord('b'):   # Draw with blue color
+            pencil_color = (255,0,0)
+            print('Pencil color ' + Style.BRIGHT + Fore.BLUE + 'blue ' + Style.RESET_ALL)
+        elif pressed_key == ord('+'):
+            thickness += 1
+            print('Pencil size increased to ' + str(thickness))
+        elif pressed_key == ord('-'):
+            thickness -= 1
+            print('Pencil size decreased to ' + str(thickness))
         
        
     cap.release()
     cv2.destroyAllWindows()
-
-
 
 
 
