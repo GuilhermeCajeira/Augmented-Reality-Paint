@@ -34,11 +34,11 @@ def main():
 
     #trackbars
     cv2.createTrackbar("Blue_min", window_name_original, 0, 255, bMin)
-    cv2.createTrackbar("Blue_max", window_name_original, 0, 255, bMax)
+    cv2.createTrackbar("Blue_max", window_name_original, 255, 255, bMax)
     cv2.createTrackbar("Green_min", window_name_original, 0, 255, gMin)
-    cv2.createTrackbar("Green_max", window_name_original, 0, 255, gMax)
+    cv2.createTrackbar("Green_max", window_name_original, 255, 255, gMax)
     cv2.createTrackbar("Red_min", window_name_original, 0, 255, rMin)
-    cv2.createTrackbar("Red_max", window_name_original, 0, 255, rMax)
+    cv2.createTrackbar("Red_max", window_name_original, 255, 255, rMax)
 
     cap=cv2.VideoCapture(0)
 
