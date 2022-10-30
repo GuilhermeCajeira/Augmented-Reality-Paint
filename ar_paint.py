@@ -6,7 +6,7 @@ import numpy as np
 import json
 from colorama import Fore, Style
 from datetime import datetime
-
+import math
 
 #Definição de argumentos 
 parser = argparse.ArgumentParser(description="Definition of test mode")
