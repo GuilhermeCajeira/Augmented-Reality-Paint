@@ -12,6 +12,7 @@ from datetime import datetime
 parser = argparse.ArgumentParser(description="Definition of test mode")
 
 parser.add_argument("-j", "--json", help="Full path to json file")
+parser.add_argument("-usp", "--use_shake_prevention", help="Runs the shake prevention code", action="store_true")
 args = parser.parse_args()
         
                       
@@ -51,8 +52,12 @@ def main():
                 y_list.append(cy)
                 # Draw the line
                 if len(x_list) > 2:
-                    cv2.line(white_board, (x_list[-2], y_list[-2]), (x_list[-1], y_list[-1]), color, thickness)
-       
+                        points_distance = math.dist((x_list[-2], y_list[-2]), (x_list[-1], y_list[-1]))
+                        if args.use_shake_prevention == False:
+                                cv2.line(white_board, (x_list[-2], y_list[-2]), (x_list[-1], y_list[-1]), color, thickness)
+                        if points_distance < 50 and args.use_shake_prevention == True:
+                                cv2.line(white_board, (x_list[-2], y_list[-2]), (x_list[-1], y_list[-1]), color, thickness)
+      
        
         # Commands list
         pressed_key = cv2.waitKey(20)   
