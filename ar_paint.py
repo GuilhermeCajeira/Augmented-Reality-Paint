@@ -38,7 +38,8 @@ def main():
     while True:
         _, image = cap.read()
         img = cv2.resize(image, (800, 600))
-        image_gui = deepcopy(img)
+        img_flipped = cv2.flip(img, 1)
+        image_gui = deepcopy(img_flipped)
         img_segmented = cv2.inRange(img, min, max)
         large_object_mask = np.zeros((600, 800, 1), np.uint8)
         contours, _ = cv2.findContours(img_segmented, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
@@ -130,7 +131,7 @@ def main():
 
         # Visualization
         cv2.imshow("Board", white_board)
-        cv2.imshow("Original", img)
+        cv2.imshow("Original", img_flipped)
         cv2.imshow("Segmented", img_segmented)
         cv2.imshow("Largest object", large_object_mask)  
    
