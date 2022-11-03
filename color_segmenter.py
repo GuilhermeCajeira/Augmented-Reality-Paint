@@ -39,6 +39,9 @@ def main():
 
     while True:
         _, image = cap.read()
+    
+        img_flipped = cv2.flip(image, 1)
+
 
         if image is None:
             print('Video is over, terminating')
@@ -46,9 +49,9 @@ def main():
 
         mins = np.array([limits['B']['min'], limits['G']['min'], limits['R']['min']])
         maxs = np.array([limits['B']['max'], limits['G']['max'], limits['R']['max']])
-        image_segmented = cv2.inRange(image, mins, maxs)
+        image_segmented = cv2.inRange(img_flipped, mins, maxs)
         
-        cv2.imshow(window_name_original, image)
+        cv2.imshow(window_name_original, img_flipped)
         cv2.imshow(window_name_segmented, image_segmented)
 
         pressed_key = cv2.waitKey(20)
