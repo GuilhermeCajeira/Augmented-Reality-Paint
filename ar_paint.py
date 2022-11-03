@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 import argparse
 from copy import deepcopy
@@ -48,7 +48,7 @@ def main():
         image_gui = deepcopy(img_flipped)
         img_segmented = cv2.inRange(img_flipped, min, max)
         large_object_mask = np.zeros((600, 800, 1), np.uint8)
-        _, contours, _ = cv2.findContours(img_segmented, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
+        contours, _ = cv2.findContours(img_segmented, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
         quadro = np.zeros((600, 800, 3), np.uint8)
         quadro.fill(255)
         quadro_preto = np.zeros((600, 800, 3), np.uint8)
@@ -69,10 +69,7 @@ def main():
                
                 # Draw the line
                 if len(x_list) > 2 and circle_draw == 0 and rectangle_draw == 0:
-                    p1 = (x_list[-2], y_list[-2])
-                    p2 = (x_list[-1], y_list[-1])
-                    points_distance = math.sqrt(((p1[0]-p2[0])**2)+((p1[1]-p2[1])**2))
-                    # points_distance = math.dist((x_list[-2], y_list[-2]), (x_list[-1], y_list[-1]))
+                    points_distance = math.dist((x_list[-2], y_list[-2]), (x_list[-1], y_list[-1]))
                     if args.use_shake_prevention == False: 
                         cv2.line(board, (x_list[-2], y_list[-2]), (x_list[-1], y_list[-1]), color, thickness)
                         if board_change == 1:
@@ -84,9 +81,7 @@ def main():
                 
                 # Draw the circle
                 if circle_draw == 1 and rectangle_draw == 0:
-                    a = (x_list[-1], y_list[-1])
-                    radius = math.sqrt(((center[0]-a[0])**2)+((center[1]-a[1])**2))
-                    # radius = math.dist(center, (x_list[-1], y_list[-1]))
+                    radius = math.dist(center, (x_list[-1], y_list[-1]))
                     cv2.circle(quadro,center,int(radius), color, thickness)
                     cv2.circle(quadro_preto,center,int(radius), color, thickness)
                     if shape_draw == 1:
@@ -152,8 +147,8 @@ def main():
             board = white_board
             print("White board")    
         elif pressed_key == ord('w'):   # Save the drawing in the drawings folder
-            # path = "/home/rafael/Desktop/psr_22-23/Parte07/Drawings/"
-            path = "/home/guilherme/UA/PSR/Augmented-Reality-Paint/"
+            path = "/home/rafael/Desktop/psr_22-23/Parte07/Drawings/"
+            # path = "/home/guilherme/UA/PSR/Augmented-Reality-Paint/"
             cv2.imwrite(path + "Drawing_" + date_now_string + ".png", white_board)
             if board_change == 1:
                 cv2.imwrite(path + "Img_Drawing_" + date_now_string + ".png", image_gui)
